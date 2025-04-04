@@ -1,0 +1,47 @@
+type Query {
+    getArticles: [Article!]!
+    getArticleById(id: ID!): Article
+}
+
+type Mutation {
+    createUser(username: String!, password: String!): User
+    login(username: String!, password: String!): String
+    createArticle(title: String!, content: String!): Article
+    updateArticle(id: ID!, title: String, content: String): Article
+    deleteArticle(id: ID!): Boolean
+    addComment(articleId: ID!, content: String!): Comment
+    likeArticle(articleId: ID!): Like
+}
+
+type User {
+    id: ID!
+    username: String!
+    articles: [Article!]!
+    comments: [Comment!]!
+    likes: [Like!]!
+}
+
+type Article {
+    id: ID!
+    title: String!
+    content: String!
+    createdAt: String!
+    author: User!
+    comments: [Comment!]!
+    likes: [Like!]!
+}
+
+type Comment {
+    id: ID!
+    content: String!
+    createdAt: String!
+    article: Article!
+    author: User!
+}
+
+type Like {
+    id: ID!
+    createdAt: String!
+    article: Article!
+    user: User!
+}

@@ -1,6 +1,5 @@
+import { User } from "@prisma/client";
 import jwt from "jsonwebtoken";
-import { PrismaClient } from "@prisma/client";
-type User = PrismaClient["User"];
 
 import * as bcrypt from "bcrypt";
 

@@ -21,11 +21,12 @@ export type Scalars = {
 export type Article = {
   __typename?: 'Article';
   author: User;
-  comments: Array<Comment>;
+  comments?: Maybe<Array<Maybe<Comment>>>;
   content: Scalars['String']['output'];
   createdAt: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  likes: Array<Like>;
+  likeCount?: Maybe<Scalars['Int']['output']>;
+  likes?: Maybe<Array<Maybe<Like>>>;
   title: Scalars['String']['output'];
 };
 
@@ -54,6 +55,7 @@ export type Mutation = {
   deleteArticle?: Maybe<Scalars['Boolean']['output']>;
   likeArticle?: Maybe<Like>;
   login?: Maybe<Scalars['String']['output']>;
+  unlikeArticle?: Maybe<Scalars['Boolean']['output']>;
   updateArticle?: Maybe<Article>;
 };
 
@@ -92,6 +94,11 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationUnlikeArticleArgs = {
+  articleId: Scalars['ID']['input'];
+};
+
+
 export type MutationUpdateArticleArgs = {
   content?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
@@ -101,7 +108,9 @@ export type MutationUpdateArticleArgs = {
 export type Query = {
   __typename?: 'Query';
   getArticleById?: Maybe<Article>;
-  getArticles: Array<Article>;
+  getArticles?: Maybe<Array<Maybe<Article>>>;
+  getCommentsByArticleId?: Maybe<Array<Maybe<Comment>>>;
+  getUserById?: Maybe<User>;
 };
 
 
@@ -109,12 +118,29 @@ export type QueryGetArticleByIdArgs = {
   id: Scalars['ID']['input'];
 };
 
+
+export type QueryGetArticlesArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetCommentsByArticleIdArgs = {
+  articleId: Scalars['ID']['input'];
+};
+
+
+export type QueryGetUserByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
 export type User = {
   __typename?: 'User';
-  articles: Array<Article>;
-  comments: Array<Comment>;
+  articles?: Maybe<Array<Maybe<Article>>>;
+  comments?: Maybe<Array<Maybe<Comment>>>;
   id: Scalars['ID']['output'];
-  likes: Array<Like>;
+  likes?: Maybe<Array<Maybe<Like>>>;
   username: Scalars['String']['output'];
 };
 
@@ -193,6 +219,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Comment: ResolverTypeWrapper<Comment>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Like: ResolverTypeWrapper<Like>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
@@ -206,6 +233,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   Comment: Comment;
   ID: Scalars['ID']['output'];
+  Int: Scalars['Int']['output'];
   Like: Like;
   Mutation: {};
   Query: {};
@@ -215,11 +243,12 @@ export type ResolversParentTypes = {
 
 export type ArticleResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Article'] = ResolversParentTypes['Article']> = {
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>;
+  comments?: Resolver<Maybe<Array<Maybe<ResolversTypes['Comment']>>>, ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  likes?: Resolver<Array<ResolversTypes['Like']>, ParentType, ContextType>;
+  likeCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  likes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Like']>>>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -248,19 +277,22 @@ export type MutationResolvers<ContextType = DataSourceContext, ParentType extend
   deleteArticle?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteArticleArgs, 'id'>>;
   likeArticle?: Resolver<Maybe<ResolversTypes['Like']>, ParentType, ContextType, RequireFields<MutationLikeArticleArgs, 'articleId'>>;
   login?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
+  unlikeArticle?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationUnlikeArticleArgs, 'articleId'>>;
   updateArticle?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType, RequireFields<MutationUpdateArticleArgs, 'id'>>;
 };
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   getArticleById?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType, RequireFields<QueryGetArticleByIdArgs, 'id'>>;
-  getArticles?: Resolver<Array<ResolversTypes['Article']>, ParentType, ContextType>;
+  getArticles?: Resolver<Maybe<Array<Maybe<ResolversTypes['Article']>>>, ParentType, ContextType, Partial<QueryGetArticlesArgs>>;
+  getCommentsByArticleId?: Resolver<Maybe<Array<Maybe<ResolversTypes['Comment']>>>, ParentType, ContextType, RequireFields<QueryGetCommentsByArticleIdArgs, 'articleId'>>;
+  getUserById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryGetUserByIdArgs, 'id'>>;
 };
 
 export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  articles?: Resolver<Array<ResolversTypes['Article']>, ParentType, ContextType>;
-  comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>;
+  articles?: Resolver<Maybe<Array<Maybe<ResolversTypes['Article']>>>, ParentType, ContextType>;
+  comments?: Resolver<Maybe<Array<Maybe<ResolversTypes['Comment']>>>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  likes?: Resolver<Array<ResolversTypes['Like']>, ParentType, ContextType>;
+  likes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Like']>>>, ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

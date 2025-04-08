@@ -16,15 +16,15 @@ export const createUser: MutationResolvers["createUser"] = async (
             },
         });
         return {
-            id: createdUser.id,
+            id: createdUser.id.toString(),
             username: createdUser.username,
-            articles: [], 
-            comments: [], 
-            likes: [], 
+            articles: [],
+            comments: [],
+            likes: [],
         };
     } catch (e) {
         if (e instanceof PrismaClientKnownRequestError) {
-            throw new Error(e.message); 
+            throw new Error(e.message);
         }
         throw new Error((e as Error).message);
     }

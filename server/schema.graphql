@@ -1,6 +1,8 @@
 type Query {
-    getArticles: [Article!]!
+    getArticles(limit: Int, offset: Int, sortBy: String): [Article]
     getArticleById(id: ID!): Article
+    getUserById(id: ID!): User
+    getCommentsByArticleId(articleId: ID!): [Comment]
 }
 
 type Mutation {
@@ -11,14 +13,15 @@ type Mutation {
     deleteArticle(id: ID!): Boolean
     addComment(articleId: ID!, content: String!): Comment
     likeArticle(articleId: ID!): Like
+    unlikeArticle(articleId: ID!): Boolean
 }
 
 type User {
     id: ID!
     username: String!
-    articles: [Article!]!
-    comments: [Comment!]!
-    likes: [Like!]!
+    articles: [Article]
+    comments: [Comment]
+    likes: [Like]
 }
 
 type Article {
@@ -27,8 +30,9 @@ type Article {
     content: String!
     createdAt: String!
     author: User!
-    comments: [Comment!]!
-    likes: [Like!]!
+    comments: [Comment]
+    likes: [Like]
+    likeCount: Int
 }
 
 type Comment {

@@ -16,7 +16,7 @@ export const createUser: MutationResolvers["createUser"] = async (
             },
         });
         return {
-            id: createdUser.id.toString(),
+            id: createdUser.id,
             username: createdUser.username,
             articles: [],
             comments: [],

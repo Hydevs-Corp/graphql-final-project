@@ -21,10 +21,11 @@ export type Scalars = {
 export type Article = {
   __typename?: 'Article';
   author: User;
+  commentCount?: Maybe<Scalars['Int']['output']>;
   comments?: Maybe<Array<Maybe<Comment>>>;
   content: Scalars['String']['output'];
   createdAt: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
+  id: Scalars['Int']['output'];
   likeCount?: Maybe<Scalars['Int']['output']>;
   likes?: Maybe<Array<Maybe<Like>>>;
   title: Scalars['String']['output'];
@@ -36,14 +37,14 @@ export type Comment = {
   author: User;
   content: Scalars['String']['output'];
   createdAt: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
+  id: Scalars['Int']['output'];
 };
 
 export type Like = {
   __typename?: 'Like';
   article: Article;
   createdAt: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
+  id: Scalars['Int']['output'];
   user: User;
 };
 
@@ -61,7 +62,7 @@ export type Mutation = {
 
 
 export type MutationAddCommentArgs = {
-  articleId: Scalars['ID']['input'];
+  articleId: Scalars['Int']['input'];
   content: Scalars['String']['input'];
 };
 
@@ -79,12 +80,12 @@ export type MutationCreateUserArgs = {
 
 
 export type MutationDeleteArticleArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars['Int']['input'];
 };
 
 
 export type MutationLikeArticleArgs = {
-  articleId: Scalars['ID']['input'];
+  articleId: Scalars['Int']['input'];
 };
 
 
@@ -95,13 +96,13 @@ export type MutationLoginArgs = {
 
 
 export type MutationUnlikeArticleArgs = {
-  articleId: Scalars['ID']['input'];
+  articleId: Scalars['Int']['input'];
 };
 
 
 export type MutationUpdateArticleArgs = {
   content?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['ID']['input'];
+  id: Scalars['Int']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -115,7 +116,7 @@ export type Query = {
 
 
 export type QueryGetArticleByIdArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars['Int']['input'];
 };
 
 
@@ -127,19 +128,19 @@ export type QueryGetArticlesArgs = {
 
 
 export type QueryGetCommentsByArticleIdArgs = {
-  articleId: Scalars['ID']['input'];
+  articleId: Scalars['Int']['input'];
 };
 
 
 export type QueryGetUserByIdArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars['Int']['input'];
 };
 
 export type User = {
   __typename?: 'User';
   articles?: Maybe<Array<Maybe<Article>>>;
   comments?: Maybe<Array<Maybe<Comment>>>;
-  id: Scalars['ID']['output'];
+  id: Scalars['Int']['output'];
   likes?: Maybe<Array<Maybe<Like>>>;
   username: Scalars['String']['output'];
 };
@@ -218,7 +219,6 @@ export type ResolversTypes = {
   Article: ResolverTypeWrapper<Article>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Comment: ResolverTypeWrapper<Comment>;
-  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Like: ResolverTypeWrapper<Like>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -232,7 +232,6 @@ export type ResolversParentTypes = {
   Article: Article;
   Boolean: Scalars['Boolean']['output'];
   Comment: Comment;
-  ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Like: Like;
   Mutation: {};
@@ -243,10 +242,11 @@ export type ResolversParentTypes = {
 
 export type ArticleResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Article'] = ResolversParentTypes['Article']> = {
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  commentCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   comments?: Resolver<Maybe<Array<Maybe<ResolversTypes['Comment']>>>, ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   likeCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   likes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Like']>>>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -258,14 +258,14 @@ export type CommentResolvers<ContextType = DataSourceContext, ParentType extends
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type LikeResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Like'] = ResolversParentTypes['Like']> = {
   article?: Resolver<ResolversTypes['Article'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -291,7 +291,7 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
 export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   articles?: Resolver<Maybe<Array<Maybe<ResolversTypes['Article']>>>, ParentType, ContextType>;
   comments?: Resolver<Maybe<Array<Maybe<ResolversTypes['Comment']>>>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   likes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Like']>>>, ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

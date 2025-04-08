@@ -1,0 +1,5 @@
+{
+  "watch": ["src"],
+  "ext": "js,json,graphql,tsx,ts",
+  "exec": "clear && npx tsx src/index.ts"
+}

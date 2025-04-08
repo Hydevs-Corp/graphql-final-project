@@ -6,19 +6,30 @@ import * as bcrypt from "bcrypt";
 export type AuthenticatedUser = Pick<User, "id" | "username">;
 
 export const createJWT = (user: AuthenticatedUser): string => {
-    return jwt.sign(
-        { id: user.id, username: user.username },
-        process.env.JWT_SECRET as string
-    );
+    return jwt.sign({ id: user.id }, process.env.JWT_SECRET as string);
 };
 
 export const getUser = (token: string): AuthenticatedUser | null => {
     try {
-        return jwt.verify(
+        const user = jwt.verify(
             token,
             process.env.JWT_SECRET as string
         ) as AuthenticatedUser;
-    } catch {
+
+        if (typeof user === "string") {
+            return null;
+        }
+
+        if (!user) {
+            return null;
+        }
+
+        return {
+            id: user.id,
+            username: user.username,
+        };
+    } catch (e) {
+        console.error(e);
         return null;
     }
 };

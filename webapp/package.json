@@ -7,9 +7,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
+    "@apollo/client": "^3.13.6",
+    "@graphql-codegen/cli": "^5.0.5",
     "@mantine/core": "^7.17.3",
     "@mantine/dates": "^7.17.3",
     "@mantine/dropzone": "^7.17.3",
@@ -17,10 +20,12 @@
     "@mantine/hooks": "^7.17.3",
     "@mantine/modals": "^7.17.3",
     "@mantine/notifications": "^7.17.3",
+    "@tabler/icons-react": "^3.31.0",
     "dayjs": "^1.11.13",
     "graphql": "^16.10.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-router": "^7.5.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

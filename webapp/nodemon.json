@@ -1,5 +1,5 @@
 {
-  "watch": ["src/hooks/requests"],
+  "watch": ["src/scripts/requests"],
   "ext": "js,json,graphql,tsx,ts",
   "exec": "clear && npm run codegen"
 }

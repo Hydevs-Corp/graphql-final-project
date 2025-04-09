@@ -1,56 +1,68 @@
-import { AuthProvider } from "./AuthProvider";
-import { AppShell, MantineProvider } from "@mantine/core";
-import { Notifications } from "@mantine/notifications";
-import { ModalsProvider } from "@mantine/modals";
-import { Outlet } from "react-router";
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import Header from "../components/layout/Header";
-import theme from "../scripts/theme";
+import {
+    ApolloClient,
+    ApolloProvider,
+    createHttpLink,
+    InMemoryCache,
+} from '@apollo/client';
+import { AppShell, MantineProvider } from '@mantine/core';
+import { ModalsProvider } from '@mantine/modals';
+import { Notifications } from '@mantine/notifications';
+import { Outlet } from 'react-router';
+import Header from '../components/layout/Header';
+import theme from '../scripts/theme';
+import { AuthProvider } from './AuthProvider';
+
+import { setContext } from '@apollo/client/link/context';
+import BackgroundProvider from './BackgroundProvider';
+import { FlyProvider } from './FlyProvider';
+import { VFXProvider } from 'react-vfx';
+
+console.log('VITE_API_URL', import.meta.env.VITE_API_URL);
+
+const httpLink = createHttpLink({
+    uri: import.meta.env.VITE_API_URL || 'http://localhost:4000/graphql',
+});
+const authLink = setContext((_, { headers }) => {
+    const token = localStorage.getItem('token');
+    return {
+        headers: {
+            ...headers,
+            authorization: token ? `Bearer ${token}` : '',
+        },
+    };
+});
 
 const client = new ApolloClient({
-  uri: "http://localhost:4000/graphql",
-  cache: new InMemoryCache(),
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache(),
 });
 
 const Providers = () => {
-  return (
-    <MantineProvider theme={theme}>
-      <ModalsProvider>
-        <ApolloProvider client={client}>
-          <AuthProvider>
-            <AppShell header={{ height: 60 }}>
-              <AppShell.Header>
-                <Header />
-              </AppShell.Header>
-              <AppShell.Main>
-                <Outlet />
-              </AppShell.Main>
-            </AppShell>
-          </AuthProvider>
-        </ApolloProvider>
-      </ModalsProvider>
-      <Notifications />
-    </MantineProvider>
-  );
+    return (
+        <VFXProvider>
+            <ApolloProvider client={client}>
+                <AuthProvider>
+                    <MantineProvider theme={theme}>
+                        <FlyProvider>
+                            <ModalsProvider>
+                                <AppShell header={{ height: 60 }}>
+                                    <AppShell.Header>
+                                        <Header />
+                                    </AppShell.Header>
+                                    <AppShell.Main>
+                                        <BackgroundProvider>
+                                            <Outlet />
+                                        </BackgroundProvider>
+                                    </AppShell.Main>
+                                </AppShell>
+                            </ModalsProvider>
+                            <Notifications />
+                        </FlyProvider>
+                    </MantineProvider>
+                </AuthProvider>
+            </ApolloProvider>
+        </VFXProvider>
+    );
 };
 
 export default Providers;
-
-{
-  /* <MantineProvider theme={theme}>
-<ModalsProvider>
-    <AuthProvider>
-      <AppShell header={{ height: 60 }}>
-        <AppShell.Header>
-          <Header />
-        </AppShell.Header>
-        <AppShell.Main>
-          <RouterProvider router={router} />
-        </AppShell.Main>
-      </AppShell>
-    </AuthProvider>
-  </ApolloProvider>
-</ModalsProvider>
-<Notifications />
-</MantineProvider> */
-}

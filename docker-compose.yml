@@ -1,0 +1,25 @@
+name: ReadThot
+services:
+    server:
+        build:
+            context: ./server
+        environment:
+            - JWT_SECRET=your-secure-secret-key
+            - DATABASE_URL=file:/app/data/dev.db
+        volumes:
+            - db_data:/app/data
+
+    webapp:
+        build:
+            context: ./webapp
+            args:
+                VITE_API_URL: ${VITE_API_URL}
+        ports:
+            - '${PORT}:80'
+        depends_on:
+            - server
+        environment:
+            - VITE_API_URL=${VITE_API_URL}
+
+volumes:
+    db_data:

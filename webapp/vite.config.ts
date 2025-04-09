@@ -3,11 +3,12 @@ import react from '@vitejs/plugin-react';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+    plugins: [react()],
 
-  resolve: {
-    alias: {
-      '@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs',
+    resolve: {
+        alias: {
+            '@tabler/icons-react':
+                '@tabler/icons-react/dist/esm/icons/index.mjs',
+        },
     },
-  },
 });

@@ -1,38 +1,40 @@
 import {
-    Flex,
     Button,
     Container,
+    Flex,
     Text,
     ThemeIcon,
     UnstyledButton,
-} from "@mantine/core";
-import { IconAsterisk } from "@tabler/icons-react";
-import { useNavigate } from "react-router";
-import { useAuth } from "../../providers/AuthProvider";
-import { modals } from "@mantine/modals";
-import RegisterModal from "../RegisterModal";
+} from '@mantine/core';
+import { modals } from '@mantine/modals';
+import { IconAsterisk } from '@tabler/icons-react';
+import { NavLink, useNavigate } from 'react-router';
+import { AuthProvider } from '../../providers/AuthProvider';
+import parseJwt from '../../scripts/decodeJWT';
+import LoginModal from '../LoginModal';
+import RegisterModal from '../RegisterModal';
 
 const Header = () => {
-    const { user, token, logout } = useAuth();
+    const { user, token, logout } = AuthProvider.use();
     const navigate = useNavigate();
     //   const { user, token, login, logout } = useAuth();
 
     return (
         <Container
-            size={"80%"}
+            size={'80%'}
             style={{
-                height: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
             }}
         >
             <Flex
-                gap={"xs"}
+                gap={'xs'}
                 align="center"
                 component={UnstyledButton}
                 onClick={() => {
-                    return navigate("/");
+                    return navigate('/');
                 }}
             >
                 <ThemeIcon size={40} radius="xl">
@@ -42,18 +44,32 @@ const Header = () => {
                     style={{
                         fontSize: 24,
                         fontWeight: 700,
-                        fontFamily: "Montserrat, sans-serif",
+                        fontFamily: 'Montserrat, sans-serif',
                     }}
-                    c={"red"}
+                    variant="gradient"
+                    fw={'bold'}
+                    gradient={{ from: 'red.4', to: 'red.8' }}
                 >
                     ReadThot
                 </Text>
             </Flex>
 
-            <Flex style={{ gap: "16px" }}>
-                {token && user ? (
+            <Flex style={{ gap: '16px' }}>
+                {token ? (
                     <>
-                        <Text>{user || "Anonymous"}</Text>
+                        <Button
+                            component={NavLink}
+                            to={`/user/${parseJwt(token).id}`}
+                            // size="lg"
+                            variant="light"
+                            style={{
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            {/* <Avatar name={user!} color="initials" /> */}
+                            {user || 'Anonymous'}
+                        </Button>
                         <Button onClick={logout}>Logout</Button>
                     </>
                 ) : (
@@ -61,8 +77,8 @@ const Header = () => {
                         <Button
                             onClick={() => {
                                 modals.open({
-                                    title: "Authentication | Login",
-                                    //   children: <LoginModal />,
+                                    title: 'Authentication | Login',
+                                    children: <LoginModal />,
                                 });
                             }}
                         >
@@ -72,7 +88,7 @@ const Header = () => {
                             variant="light"
                             onClick={() => {
                                 modals.open({
-                                    title: "Authentication | Register",
+                                    title: 'Authentication | Register',
                                     children: <RegisterModal />,
                                 });
                             }}

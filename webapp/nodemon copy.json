@@ -1,5 +1,0 @@
-{
-  "watch": ["src/hooks/requests"],
-  "ext": "js,json,graphql,tsx,ts",
-  "exec": "npm run codegen"
-}

@@ -1,14 +1,32 @@
-export type TrackModel = {
-    id: string;
-    title: string;
-    authorId: string;
-    thumbnail: string;
-    length: number;
-    modulesCount: number;
+export type UserModel = {
+    id: number;
+    username: string;
+    articles?: ArticleModel[];
+    comments?: CommentModel[];
+    likes?: LikeModel[];
 };
 
-export type AuthorModel = {
-    id: string;
-    name: string;
-    photo: string;
+export type ArticleModel = {
+    id: number;
+    title: string;
+    content: string;
+    createdAt: string;
+    author: UserModel;
+    comments?: CommentModel[];
+    likes?: LikeModel[];
+};
+
+export type CommentModel = {
+    id: number;
+    content: string;
+    createdAt: string;
+    author: UserModel;
+    article: ArticleModel;
+};
+
+export type LikeModel = {
+    id: number;
+    createdAt: string;
+    user: UserModel;
+    article: ArticleModel;
 };

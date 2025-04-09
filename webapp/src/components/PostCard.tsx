@@ -1,56 +1,117 @@
-import { Button, Card, Flex, Text, Title, UnstyledButton } from '@mantine/core';
-import { NavLink } from 'react-router';
+import {
+    Avatar,
+    Button,
+    Card,
+    Flex,
+    Text,
+    UnstyledButton,
+} from '@mantine/core';
+import { NavLink, useNavigate } from 'react-router';
 import Comment from './postutilities/Comment';
 import Like from './postutilities/Like';
+import { ellipsis } from '../scripts/ellipsis';
+import Markdown from 'markdown-to-jsx';
 
 //FAIRE GET POUR AFFICHER LES INFORMATIONS
 
+const formatetdDate = Intl.DateTimeFormat('en-US', {
+    month: 'long',
+    year: 'numeric',
+    day: 'numeric',
+});
+
 const PostCard = ({
-  title,
-  desc,
-  likes,
-  comments,
-  id,
+    title,
+    content,
+    likeCount,
+    commentCount,
+    id,
+    isLiked,
+    author: { id: authID, username },
+    createdAt,
 }: {
-  title: string;
-  desc: string;
-  likes: number;
-  comments: number;
-  id: number;
+    title: string;
+    content: string;
+    likeCount: number;
+    commentCount: number;
+    id: number;
+    isLiked: boolean;
+    author: {
+        username: string;
+        id: number;
+    };
+    createdAt: string;
 }) => {
-  return (
-    <Card>
-      <Card.Section py="md" inheritPadding withBorder>
-        <Flex
-          justify="flex-start"
-          align="flex-start"
-          direction="column"
-          wrap="wrap"
-        >
-          <UnstyledButton component={NavLink} to={`/post/${id}`}>
-            <Title size="h4">{title}</Title>
-          </UnstyledButton>
-          <Flex>
-            <Text>Proprio du Posteu</Text>
-            <Text>Date de publication</Text>
-          </Flex>
-        </Flex>
-      </Card.Section>
-      <Text lineClamp={3}>{desc}</Text>
-      <Flex mt={'xs'} gap="xs" justify={'space-between'}>
-        <Flex gap={'xs'}>
-          <Like count={likes} />
-          <Comment count={comments} />
-        </Flex>
-        <Flex>
-          {/* // Onclick de redirection */}
-          <Button component={NavLink} to={`/post/${id}`} variant="light">
-            Read more
-          </Button>
-        </Flex>
-      </Flex>
-    </Card>
-  );
+    const CreatedAt = createdAt
+        ? formatetdDate.format(new Date(createdAt))
+        : '';
+    const n = useNavigate();
+    return (
+        <Card p={'sm'}>
+            <Card.Section py="sm" inheritPadding withBorder>
+                <Flex
+                    justify="flex-start"
+                    align="flex-start"
+                    direction="column"
+                    wrap="wrap"
+                >
+                    <UnstyledButton component={NavLink} to={`/post/${id}`}>
+                        <Text maw={400} truncate="end" size="xl">
+                            {title}
+                        </Text>
+                    </UnstyledButton>
+                    <Flex
+                        justify={'center'}
+                        align={'baseline'}
+                        mt={10}
+                        gap={10}
+                    >
+                        <UnstyledButton
+                            component={NavLink}
+                            to={`/user/${authID}`}
+                            style={{
+                                display: 'flex',
+                                gap: 10,
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Avatar name={username} color="initials" />
+                            <Text>{ellipsis(username, 30)}</Text>
+                        </UnstyledButton>
+                        <Text size="xs">{CreatedAt}</Text>
+                    </Flex>
+                </Flex>
+            </Card.Section>
+            {/* <Text flex={1} mt={'md'} lineClamp={3}> */}
+            <Markdown>{content}</Markdown>
+            {/* </Text> */}
+            <Flex mt={'xs'} gap="xs" justify={'space-between'}>
+                <Flex gap={'xs'}>
+                    <Like
+                        count={likeCount}
+                        isDefaultLiked={isLiked}
+                        articleId={id}
+                    />
+                    <Comment
+                        count={commentCount}
+                        onClick={() => {
+                            n(`/post/${id}?scroll`);
+                        }}
+                    />
+                </Flex>
+                <Flex>
+                    {/* // Onclick de redirection */}
+                    <Button
+                        component={NavLink}
+                        to={`/post/${id}`}
+                        variant="light"
+                    >
+                        Read more
+                    </Button>
+                </Flex>
+            </Flex>
+        </Card>
+    );
 };
 
 export default PostCard;

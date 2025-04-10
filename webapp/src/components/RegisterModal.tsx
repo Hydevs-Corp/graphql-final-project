@@ -73,7 +73,7 @@ const RegisterModal = () => {
             </Group>
             {state.error && (
                 <div style={{ color: 'red', marginTop: '1rem' }}>
-                    Username or password incorrect
+                    Username already taken
                 </div>
             )}
         </form>

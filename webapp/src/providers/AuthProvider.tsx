@@ -99,7 +99,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             localStorage.setItem('token', res?.data?.login || '');
             return res;
         } catch (error) {
-            console.error('Registration failed:', error);
+            return {
+                errors: [new GraphQLError('Invalid username or password')],
+            };
         }
     };
 

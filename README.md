@@ -57,14 +57,21 @@ The project is organized as a monorepo with two main directories:
 
 ### Prerequisites
 
--   Node.js (v16 or higher)
+-   Node.js (v22 or higher)
 -   npm or yarn
 -   SQLite
 
 ### Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Hydevs-Corp/graphql-final-project
+cd graphql-final-project
+```
+
+or with ssh
+
+```bash
+git clone git@github.com:Hydevs-Corp/graphql-final-project.git
 cd graphql-final-project
 ```
 
@@ -116,6 +123,17 @@ The server will run at `http://localhost:4000/graphql`.
 
 The frontend will run at `http://localhost:5173`.
 
+### Docker Compose Setup
+
+1. Ensure Docker and Docker Compose are installed on your system.
+2. Run the following command to start the project:
+
+    ```bash
+    docker-compose up -d
+    ```
+
+3. The backend will be available at `http://localhost:4000/graphql` and the frontend at `http://localhost:5173`.
+
 ---
 
 ## Usage
@@ -125,23 +143,6 @@ The frontend will run at `http://localhost:5173`.
     - Production: [https://readthot.louisrvl.fr/](https://readthot.louisrvl.fr/)
 2. Register a new user or log in with an existing account.
 3. Create, view, and interact with articles.
-
----
-
-## Scripts
-
-### Backend
-
--   `npm run dev`: Start the development server.
--   `npm run compile`: Compile TypeScript to JavaScript.
--   `npm run prisma`: Run Prisma commands.
-
-### Frontend
-
--   `npm run dev`: Start the development server.
--   `npm run build`: Build the production-ready app.
--   `npm run lint`: Run ESLint for code quality checks.
--   `npm run codegen`: Generate GraphQL types and hooks.
 
 ---
 

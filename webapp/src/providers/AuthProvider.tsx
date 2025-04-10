@@ -1,10 +1,17 @@
-import { FetchResult, useMutation } from '@apollo/client';
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { FetchResult, useMutation, useQuery } from '@apollo/client';
+import {
+    createContext,
+    ReactNode,
+    useContext,
+    useEffect,
+    useState,
+} from 'react';
 import parseJwt from '../scripts/decodeJWT';
 import loginUser_MUTATE from '../scripts/requests/loginUser';
 import registerUser_MUTATE from '../scripts/requests/registerUser';
 import { CreateUserMutation, LoginMutation } from '../gql/graphql';
 import { GraphQLError } from 'graphql';
+import getCurrentUser_QUERY from '../scripts/requests/getCurrentUser';
 
 // Définir le contexte d'authentification
 interface AuthContextType {
@@ -105,11 +112,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    const storedToken = localStorage.getItem('token');
-    if (storedToken && !token) {
-        setToken(storedToken);
-        setUser(parseJwt(storedToken).username);
-    }
+    const { data, loading, error } = useQuery(getCurrentUser_QUERY);
+    useEffect(() => {
+        if (loading) return;
+        if (!data?.getCurrentUser?.id || error) {
+            logout();
+        }
+    }, [data, error, loading]);
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            setToken(storedToken);
+            setUser(parseJwt(storedToken).username);
+        }
+    }, []);
+    // const storedToken = localStorage.getItem('token');
+    // if (storedToken && !token) {
+    //     setToken(storedToken);
+    //     setUser(parseJwt(storedToken).username);
+    // }
 
     return (
         <AuthContext.Provider

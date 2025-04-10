@@ -120,10 +120,16 @@ const Post = () => {
         return navigate('/');
     };
 
-    const CreatedAt = data?.getArticleById?.createdAt
-        ? formatetdDate.format(new Date(data?.getArticleById?.createdAt))
-        : '';
-
+    let createdAtValue = '';
+    try {
+        createdAtValue = data?.getArticleById?.createdAt
+            ? formatetdDate.format(
+                  new Date(parseInt(data?.getArticleById?.createdAt))
+              )
+            : '';
+    } catch (error) {
+        console.error('Error formatting date:', error);
+    }
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -252,7 +258,7 @@ const Post = () => {
                                 {data?.getArticleById?.author?.username}
                             </Text>
                             <Text c={'grey'} size="xs">
-                                published on {CreatedAt}
+                                published on {createdAtValue}
                             </Text>
                         </Flex>
                     </Flex>

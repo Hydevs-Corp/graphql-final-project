@@ -42,9 +42,14 @@ const PostCard = ({
     };
     createdAt: string;
 }) => {
-    const CreatedAt = createdAt
-        ? formatetdDate.format(new Date(createdAt))
-        : '';
+    let createdAtValue = '';
+    try {
+        createdAtValue = createdAt
+            ? formatetdDate.format(new Date(parseInt(createdAt)))
+            : '';
+    } catch (error) {
+        console.error('Error formatting date:', error);
+    }
     const n = useNavigate();
     return (
         <Card p={'sm'}>
@@ -78,7 +83,7 @@ const PostCard = ({
                             <Avatar name={username} color="initials" />
                             <Text>{ellipsis(username, 30)}</Text>
                         </UnstyledButton>
-                        <Text size="xs">{CreatedAt}</Text>
+                        <Text size="xs">{createdAtValue}</Text>
                     </Flex>
                 </Flex>
             </Card.Section>

@@ -1,11 +1,4 @@
-import {
-    Button,
-    Container,
-    Flex,
-    Text,
-    ThemeIcon,
-    UnstyledButton,
-} from '@mantine/core';
+import { Button, Flex, Text, ThemeIcon, UnstyledButton } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconAsterisk } from '@tabler/icons-react';
 import { NavLink, useNavigate } from 'react-router';
@@ -20,15 +13,7 @@ const Header = () => {
     //   const { user, token, login, logout } = useAuth();
 
     return (
-        <Container
-            size={'80%'}
-            style={{
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-            }}
-        >
+        <Flex justify={'space-between'} align={'center'} h={'100%'} px={'xs'}>
             <Flex
                 gap={'xs'}
                 align="center"
@@ -97,9 +82,8 @@ const Header = () => {
                         </Button>
                     </>
                 )}
-                {/* <NavLink to={} /> */}
             </Flex>
-        </Container>
+        </Flex>
     );
 };
 

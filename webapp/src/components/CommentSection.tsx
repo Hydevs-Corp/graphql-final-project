@@ -86,17 +86,16 @@ const CommentSection = ({
                                 <Text>{comment.author.username}</Text>
                             </Flex>
                             <Text>
-                                {new Date(comment.createdAt).toLocaleString(
-                                    'en-US',
-                                    {
-                                        month: 'long',
-                                        year: 'numeric',
-                                        day: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                        second: '2-digit',
-                                    }
-                                )}
+                                {new Date(
+                                    parseInt(comment.createdAt)
+                                ).toLocaleString('en-US', {
+                                    month: 'long',
+                                    year: 'numeric',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: '2-digit',
+                                })}
                             </Text>
                         </Flex>
                         <Text mt={'sm'}>{comment.content}</Text>

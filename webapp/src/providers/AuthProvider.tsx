@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             localStorage.setItem('token', tokenJWT);
             return res;
         } catch (error) {
-            console.error('Login failed:', error);
+            // console.error('Login failed:', error);
             return {
                 errors: [new GraphQLError('Invalid username or password')],
             };
@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setToken(null);
             localStorage.removeItem('token');
         } catch (error) {
-            console.error('Logout failed:', error);
+            // console.error('Logout failed:', error);
         }
     };
 

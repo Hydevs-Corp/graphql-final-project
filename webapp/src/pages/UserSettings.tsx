@@ -95,11 +95,6 @@ const UserSettings = () => {
     }, [data]);
 
     const { hasFly, setHasFly } = FlyProvider.use();
-    console.log(
-        user === data?.getUserById?.username,
-        user,
-        data?.getUserById?.username
-    );
 
     return (
         <Container

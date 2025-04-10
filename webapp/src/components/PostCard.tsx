@@ -83,7 +83,13 @@ const PostCard = ({
                 </Flex>
             </Card.Section>
             {/* <Text flex={1} mt={'md'} lineClamp={3}> */}
-            <Markdown>{content}</Markdown>
+            <Markdown
+                style={{
+                    flex: 1,
+                }}
+            >
+                {content}
+            </Markdown>
             {/* </Text> */}
             <Flex mt={'xs'} gap="xs" justify={'space-between'}>
                 <Flex gap={'xs'}>

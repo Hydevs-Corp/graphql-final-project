@@ -1,9 +1,9 @@
-import { User } from "@prisma/client";
-import jwt from "jsonwebtoken";
+import { User } from '@prisma/client';
+import jwt from 'jsonwebtoken';
 
-import * as bcrypt from "bcrypt";
+import * as bcrypt from 'bcrypt';
 
-export type AuthenticatedUser = Pick<User, "id" | "username">;
+export type AuthenticatedUser = Pick<User, 'id' | 'username'>;
 
 export const createJWT = (user: AuthenticatedUser): string => {
     return jwt.sign({ id: user.id }, process.env.JWT_SECRET as string);
@@ -16,7 +16,7 @@ export const getUser = (token: string): AuthenticatedUser | null => {
             process.env.JWT_SECRET as string
         ) as AuthenticatedUser;
 
-        if (typeof user === "string") {
+        if (typeof user === 'string') {
             return null;
         }
 

@@ -1,6 +1,6 @@
-import { ArticleResolvers, Resolvers } from './types.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { Resolvers } from './types.js';
 
 export const resolvers: Resolvers = {
     Query: {
@@ -89,9 +89,12 @@ export const resolvers: Resolvers = {
 
             if (!articles) throw new Error('No articles found');
 
-            return articles.map((article) => ({
+            return articles.map((article: (typeof articles)[number]) => ({
                 ...article,
-                isLiked: article.likes.some((like) => like.userId === user?.id),
+                isLiked: article.likes.some(
+                    (like: (typeof article.likes)[number]) =>
+                        like.userId === user?.id
+                ),
                 likeCount: article._count.likes,
                 commentCount: article._count.comments,
                 createdAt: article.createdAt.toISOString(),
@@ -99,42 +102,46 @@ export const resolvers: Resolvers = {
                     id: article.author.id,
                     username: article.author.username,
                 },
-                comments: article.comments.map((comment) => ({
-                    ...comment,
-                    createdAt: comment.createdAt.toISOString(),
-                    author: {
-                        id: comment.author.id,
-                        username: comment.author.username,
-                    },
-                    article: {
-                        id: comment.article.id,
-                        title: comment.article.title,
-                        content: comment.article.content,
-                        createdAt: comment.article.createdAt.toISOString(),
+                comments: article.comments.map(
+                    (comment: (typeof article.comments)[number]) => ({
+                        ...comment,
+                        createdAt: comment.createdAt.toISOString(),
                         author: {
-                            id: comment.article.author.id,
-                            username: comment.article.author.username,
+                            id: comment.author.id,
+                            username: comment.author.username,
                         },
-                    },
-                })),
-                likes: article.likes.map((like) => ({
-                    ...like,
-                    createdAt: like.createdAt.toISOString(),
-                    user: {
-                        id: like.user.id,
-                        username: like.user.username,
-                    },
-                    article: {
-                        id: like.article.id,
-                        title: like.article.title,
-                        content: like.article.content,
-                        createdAt: like.article.createdAt.toISOString(),
-                        author: {
-                            id: like.article.author.id,
-                            username: like.article.author.username,
+                        article: {
+                            id: comment.article.id,
+                            title: comment.article.title,
+                            content: comment.article.content,
+                            createdAt: comment.article.createdAt.toISOString(),
+                            author: {
+                                id: comment.article.author.id,
+                                username: comment.article.author.username,
+                            },
                         },
-                    },
-                })),
+                    })
+                ),
+                likes: article.likes.map(
+                    (like: (typeof article.likes)[number]) => ({
+                        ...like,
+                        createdAt: like.createdAt.toISOString(),
+                        user: {
+                            id: like.user.id,
+                            username: like.user.username,
+                        },
+                        article: {
+                            id: like.article.id,
+                            title: like.article.title,
+                            content: like.article.content,
+                            createdAt: like.article.createdAt.toISOString(),
+                            author: {
+                                id: like.article.author.id,
+                                username: like.article.author.username,
+                            },
+                        },
+                    })
+                ),
             }));
         },
         async getArticleById(_, { id }, { dataSources, user }) {
@@ -168,46 +175,53 @@ export const resolvers: Resolvers = {
             return {
                 ...article,
 
-                isLiked: article.likes.some((like) => like.userId === user?.id),
+                isLiked: article.likes.some(
+                    (like: (typeof article.likes)[number]) =>
+                        like.userId === user?.id
+                ),
                 likeCount: article._count.likes,
                 commentCount: article._count.comments,
                 createdAt: article.createdAt.toISOString(),
-                comments: article.comments.map((comment) => ({
-                    ...comment,
-                    createdAt: comment.createdAt.toISOString(),
-                    author: {
-                        id: comment.author.id,
-                        username: comment.author.username,
-                    },
-                    article: {
-                        id: comment.article.id,
-                        title: comment.article.title,
-                        content: comment.article.content,
-                        createdAt: comment.article.createdAt.toISOString(),
+                comments: article.comments.map(
+                    (comment: (typeof article.comments)[number]) => ({
+                        ...comment,
+                        createdAt: comment.createdAt.toISOString(),
                         author: {
-                            id: comment.article.author.id,
-                            username: comment.article.author.username,
+                            id: comment.author.id,
+                            username: comment.author.username,
                         },
-                    },
-                })),
-                likes: article.likes.map((like) => ({
-                    ...like,
-                    createdAt: like.createdAt.toISOString(),
-                    user: {
-                        id: like.user.id,
-                        username: like.user.username,
-                    },
-                    article: {
-                        id: like.article.id,
-                        title: like.article.title,
-                        content: like.article.content,
-                        createdAt: like.article.createdAt.toISOString(),
-                        author: {
-                            id: like.article.author.id,
-                            username: like.article.author.username,
+                        article: {
+                            id: comment.article.id,
+                            title: comment.article.title,
+                            content: comment.article.content,
+                            createdAt: comment.article.createdAt.toISOString(),
+                            author: {
+                                id: comment.article.author.id,
+                                username: comment.article.author.username,
+                            },
                         },
-                    },
-                })),
+                    })
+                ),
+                likes: article.likes.map(
+                    (like: (typeof article.likes)[number]) => ({
+                        ...like,
+                        createdAt: like.createdAt.toISOString(),
+                        user: {
+                            id: like.user.id,
+                            username: like.user.username,
+                        },
+                        article: {
+                            id: like.article.id,
+                            title: like.article.title,
+                            content: like.article.content,
+                            createdAt: like.article.createdAt.toISOString(),
+                            author: {
+                                id: like.article.author.id,
+                                username: like.article.author.username,
+                            },
+                        },
+                    })
+                ),
             };
         },
         async getUserById(_, { id }, { dataSources }) {
@@ -246,21 +260,25 @@ export const resolvers: Resolvers = {
             if (!user) throw new Error('User not found');
             return {
                 ...user,
-                articles: user.articles.map((article) => ({
-                    ...article,
-                    likeCount: article._count.likes,
-                    commentCount: article._count.comments,
-                    createdAt: article.createdAt.toISOString(),
-                })),
-                comments: user.comments.map((comment) => ({
-                    ...comment,
-                    article: {
-                        ...comment.article,
-                        createdAt: comment.article.createdAt.toISOString(),
-                    },
-                    createdAt: comment.createdAt.toISOString(),
-                })),
-                likes: user.likes.map((like) => ({
+                articles: user.articles.map(
+                    (article: (typeof user.articles)[number]) => ({
+                        ...article,
+                        likeCount: article._count.likes,
+                        commentCount: article._count.comments,
+                        createdAt: article.createdAt.toISOString(),
+                    })
+                ),
+                comments: user.comments.map(
+                    (comment: (typeof user.comments)[number]) => ({
+                        ...comment,
+                        article: {
+                            ...comment.article,
+                            createdAt: comment.article.createdAt.toISOString(),
+                        },
+                        createdAt: comment.createdAt.toISOString(),
+                    })
+                ),
+                likes: user.likes.map((like: (typeof user.likes)[number]) => ({
                     ...like,
                     createdAt: like.createdAt.toISOString(),
                     article: {
@@ -283,7 +301,7 @@ export const resolvers: Resolvers = {
 
             if (!comments) throw new Error('Article not found');
 
-            return comments.map((comment) => ({
+            return comments.map((comment: (typeof comments)[number]) => ({
                 ...comment,
                 createdAt: comment.createdAt.toISOString(),
                 article: {

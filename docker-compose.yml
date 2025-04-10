@@ -5,9 +5,9 @@ services:
             context: ./server
         environment:
             - JWT_SECRET=your-secure-secret-key
-            - DATABASE_URL=file:/app/data/dev.db
+            - DATABASE_URL=file:./dev.db
         volumes:
-            - db_data:/app/data
+            - ./server/prisma:/app/prisma/
 
     webapp:
         build:
@@ -20,6 +20,3 @@ services:
             - server
         environment:
             - VITE_API_URL=${VITE_API_URL}
-
-volumes:
-    db_data:

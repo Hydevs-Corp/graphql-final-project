@@ -1,58 +1,59 @@
 type Query {
-  getArticles(
-    limit: Int
-    offset: Int
-    sortBy: String
-    filter: String
-  ): [Article]
-  getArticleById(id: Int!): Article
-  getUserById(id: Int!): User
-  getCommentsByArticleId(articleId: Int!): [Comment]
+    getArticles(
+        limit: Int
+        offset: Int
+        sortBy: String
+        filter: String
+    ): [Article]
+    getArticleById(id: Int!): Article
+    getUserById(id: Int!): User
+    getCommentsByArticleId(articleId: Int!): [Comment]
+    getCurrentUser: User
 }
 
 type Mutation {
-  createUser(username: String!, password: String!): User
-  login(username: String!, password: String!): String
-  createArticle(title: String!, content: String!): Article
-  updateArticle(id: Int!, title: String, content: String): Article
-  deleteArticle(id: Int!): Boolean
-  addComment(articleId: Int!, content: String!): Comment
-  likeArticle(articleId: Int!): Like
-  unlikeArticle(articleId: Int!): Boolean
+    createUser(username: String!, password: String!): User
+    login(username: String!, password: String!): String
+    createArticle(title: String!, content: String!): Article
+    updateArticle(id: Int!, title: String, content: String): Article
+    deleteArticle(id: Int!): Boolean
+    addComment(articleId: Int!, content: String!): Comment
+    likeArticle(articleId: Int!): Like
+    unlikeArticle(articleId: Int!): Boolean
 }
 
 type User {
-  id: Int!
-  username: String!
-  articles: [Article]
-  comments: [Comment]
-  likes: [Like]
+    id: Int!
+    username: String!
+    articles: [Article]
+    comments: [Comment]
+    likes: [Like]
 }
 
 type Article {
-  id: Int!
-  title: String!
-  content: String!
-  createdAt: String!
-  author: User!
-  comments: [Comment]
-  likes: [Like]
-  commentCount: Int!
-  likeCount: Int!
-  isLiked: Boolean
+    id: Int!
+    title: String!
+    content: String!
+    createdAt: String!
+    author: User!
+    comments: [Comment]
+    likes: [Like]
+    commentCount: Int!
+    likeCount: Int!
+    isLiked: Boolean
 }
 
 type Comment {
-  id: Int!
-  content: String!
-  createdAt: String!
-  article: Article!
-  author: User!
+    id: Int!
+    content: String!
+    createdAt: String!
+    article: Article!
+    author: User!
 }
 
 type Like {
-  id: Int!
-  createdAt: String!
-  article: Article!
-  user: User!
+    id: Int!
+    createdAt: String!
+    article: Article!
+    user: User!
 }

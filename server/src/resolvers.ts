@@ -3,6 +3,96 @@ import jwt from 'jsonwebtoken';
 import { Resolvers } from './types.js';
 
 export const resolvers: Resolvers = {
+    Article: {
+        comments: async (parent, _, { dataSources }) => {
+            return await dataSources.db.comment.findMany({
+                where: { articleId: parent.id },
+            });
+        },
+        likes: async (parent, _, { dataSources }) => {
+            return await dataSources.db.like.findMany({
+                where: { articleId: parent.id },
+            });
+        },
+        author: async (parent, _, { dataSources }) => {
+            const author = await dataSources.db.user.findUnique({
+                where: { id: parent.authorId },
+            });
+            if (!author) {
+                throw new Error('Author not found');
+            }
+            return author;
+        },
+        likeCount: async (parent, _, { dataSources }) => {
+            const likes = await dataSources.db.like.count({
+                where: { articleId: parent.id },
+            });
+            return likes;
+        },
+        commentCount: async (parent, _, { dataSources }) => {
+            const comments = await dataSources.db.comment.count({
+                where: { articleId: parent.id },
+            });
+            return comments;
+        },
+    },
+    User: {
+        articles: async (parent, _, { dataSources }) => {
+            return await dataSources.db.article.findMany({
+                where: { authorId: parent.id },
+            });
+        },
+        comments: async (parent, _, { dataSources }) => {
+            return await dataSources.db.comment.findMany({
+                where: { authorId: parent.id },
+            });
+        },
+        likes: async (parent, _, { dataSources }) => {
+            return await dataSources.db.like.findMany({
+                where: { userId: parent.id },
+            });
+        },
+    },
+    Like: {
+        article: async (parent, _, { dataSources }) => {
+            const article = await dataSources.db.article.findUnique({
+                where: { id: parent.articleId },
+            });
+            if (!article) {
+                throw new Error('Article not found');
+            }
+            return article;
+        },
+        user: async (parent, _, { dataSources }) => {
+            const user = await dataSources.db.user.findUnique({
+                where: { id: parent.userId },
+            });
+            if (!user) {
+                throw new Error('User not found');
+            }
+            return user;
+        },
+    },
+    Comment: {
+        article: async (parent, _, { dataSources }) => {
+            const article = await dataSources.db.article.findUnique({
+                where: { id: parent.articleId },
+            });
+            if (!article) {
+                throw new Error('Article not found');
+            }
+            return article;
+        },
+        author: async (parent, _, { dataSources }) => {
+            const author = await dataSources.db.user.findUnique({
+                where: { id: parent.authorId },
+            });
+            if (!author) {
+                throw new Error('Author not found');
+            }
+            return author;
+        },
+    },
     Query: {
         async getArticles(
             _,
@@ -60,255 +150,47 @@ export const resolvers: Resolvers = {
                       }
                     : undefined,
                 orderBy,
-                include: {
-                    _count: {
-                        select: {
-                            comments: true,
-                            likes: true,
-                        },
-                    },
-                    author: true,
-                    comments: {
-                        include: {
-                            author: true,
-                            article: {
-                                include: { author: true },
-                            },
-                        },
-                    },
-                    likes: {
-                        include: {
-                            user: true,
-                            article: {
-                                include: { author: true },
-                            },
-                        },
-                    },
-                },
             });
 
             if (!articles) throw new Error('No articles found');
 
-            return articles.map((article: (typeof articles)[number]) => ({
-                ...article,
-                isLiked: article.likes.some(
-                    (like: (typeof article.likes)[number]) =>
-                        like.userId === user?.id
-                ),
-                likeCount: article._count.likes,
-                commentCount: article._count.comments,
-                createdAt: article.createdAt.toISOString(),
-                author: {
-                    id: article.author.id,
-                    username: article.author.username,
-                },
-                comments: article.comments.map(
-                    (comment: (typeof article.comments)[number]) => ({
-                        ...comment,
-                        createdAt: comment.createdAt.toISOString(),
-                        author: {
-                            id: comment.author.id,
-                            username: comment.author.username,
-                        },
-                        article: {
-                            id: comment.article.id,
-                            title: comment.article.title,
-                            content: comment.article.content,
-                            createdAt: comment.article.createdAt.toISOString(),
-                            author: {
-                                id: comment.article.author.id,
-                                username: comment.article.author.username,
-                            },
-                        },
-                    })
-                ),
-                likes: article.likes.map(
-                    (like: (typeof article.likes)[number]) => ({
-                        ...like,
-                        createdAt: like.createdAt.toISOString(),
-                        user: {
-                            id: like.user.id,
-                            username: like.user.username,
-                        },
-                        article: {
-                            id: like.article.id,
-                            title: like.article.title,
-                            content: like.article.content,
-                            createdAt: like.article.createdAt.toISOString(),
-                            author: {
-                                id: like.article.author.id,
-                                username: like.article.author.username,
-                            },
-                        },
-                    })
-                ),
-            }));
+            return articles;
         },
         async getArticleById(_, { id }, { dataSources, user }) {
             const article = await dataSources.db.article.findUnique({
                 where: { id },
-                include: {
-                    author: true,
-                    _count: {
-                        select: {
-                            comments: true,
-                            likes: true,
-                        },
-                    },
-                    comments: {
-                        include: {
-                            author: true,
-                            article: { include: { author: true } },
-                        },
-                    },
-                    likes: {
-                        include: {
-                            user: true,
-                            article: { include: { author: true } },
-                        },
-                    },
-                },
             });
 
             if (!article) throw new Error('Article not found');
 
-            return {
-                ...article,
-
-                isLiked: article.likes.some(
-                    (like: (typeof article.likes)[number]) =>
-                        like.userId === user?.id
-                ),
-                likeCount: article._count.likes,
-                commentCount: article._count.comments,
-                createdAt: article.createdAt.toISOString(),
-                comments: article.comments.map(
-                    (comment: (typeof article.comments)[number]) => ({
-                        ...comment,
-                        createdAt: comment.createdAt.toISOString(),
-                        author: {
-                            id: comment.author.id,
-                            username: comment.author.username,
-                        },
-                        article: {
-                            id: comment.article.id,
-                            title: comment.article.title,
-                            content: comment.article.content,
-                            createdAt: comment.article.createdAt.toISOString(),
-                            author: {
-                                id: comment.article.author.id,
-                                username: comment.article.author.username,
-                            },
-                        },
-                    })
-                ),
-                likes: article.likes.map(
-                    (like: (typeof article.likes)[number]) => ({
-                        ...like,
-                        createdAt: like.createdAt.toISOString(),
-                        user: {
-                            id: like.user.id,
-                            username: like.user.username,
-                        },
-                        article: {
-                            id: like.article.id,
-                            title: like.article.title,
-                            content: like.article.content,
-                            createdAt: like.article.createdAt.toISOString(),
-                            author: {
-                                id: like.article.author.id,
-                                username: like.article.author.username,
-                            },
-                        },
-                    })
-                ),
-            };
+            return article;
         },
         async getUserById(_, { id }, { dataSources }) {
             const user = await dataSources.db.user.findUnique({
                 where: { id },
-                include: {
-                    articles: {
-                        include: {
-                            author: true,
-                            _count: {
-                                select: {
-                                    comments: true,
-                                    likes: true,
-                                },
-                            },
-                        },
-                    },
-                    comments: {
-                        include: {
-                            author: true,
-                            article: {
-                                include: { author: true },
-                            },
-                        },
-                    },
-                    likes: {
-                        include: {
-                            user: true,
-                            article: {
-                                include: { author: true },
-                            },
-                        },
-                    },
-                },
             });
             if (!user) throw new Error('User not found');
-            return {
-                ...user,
-                articles: user.articles.map(
-                    (article: (typeof user.articles)[number]) => ({
-                        ...article,
-                        likeCount: article._count.likes,
-                        commentCount: article._count.comments,
-                        createdAt: article.createdAt.toISOString(),
-                    })
-                ),
-                comments: user.comments.map(
-                    (comment: (typeof user.comments)[number]) => ({
-                        ...comment,
-                        article: {
-                            ...comment.article,
-                            createdAt: comment.article.createdAt.toISOString(),
-                        },
-                        createdAt: comment.createdAt.toISOString(),
-                    })
-                ),
-                likes: user.likes.map((like: (typeof user.likes)[number]) => ({
-                    ...like,
-                    createdAt: like.createdAt.toISOString(),
-                    article: {
-                        ...like.article,
-                        createdAt: like.article.createdAt.toISOString(),
-                    },
-                })),
-            };
+            return user;
         },
         async getCommentsByArticleId(_, { articleId }, { dataSources }) {
             const comments = await dataSources.db.comment.findMany({
                 where: { articleId },
-                include: {
-                    author: true,
-                    article: {
-                        include: { author: true },
-                    },
-                },
             });
 
             if (!comments) throw new Error('Article not found');
 
-            return comments.map((comment: (typeof comments)[number]) => ({
-                ...comment,
-                createdAt: comment.createdAt.toISOString(),
-                article: {
-                    ...comment.article,
-                    createdAt: comment.article.createdAt.toISOString(),
-                },
-            }));
+            return comments;
+        },
+        async getCurrentUser(_, __, { user, dataSources }) {
+            if (!user?.id) throw new Error('Authentication required');
+
+            const userInDb = await dataSources.db.user.findUnique({
+                where: { id: user.id },
+            });
+
+            if (!userInDb || userInDb.username !== user?.username)
+                throw new Error('User not found');
+            return userInDb;
         },
     },
     Mutation: {
@@ -335,20 +217,9 @@ export const resolvers: Resolvers = {
 
             const article = await dataSources.db.article.create({
                 data: { title, content, authorId: user.id },
-                include: { author: true },
             });
 
-            return {
-                ...article,
-                createdAt: article.createdAt.toISOString(),
-                isLiked: false,
-                commentCount: 0,
-                likeCount: 0,
-                author: {
-                    id: article.author.id,
-                    username: article.author.username,
-                },
-            };
+            return article;
         },
         async updateArticle(_, { id, title, content }, { dataSources, user }) {
             const article = await dataSources.db.article.findUnique({
@@ -363,16 +234,9 @@ export const resolvers: Resolvers = {
             const updatedArticle = await dataSources.db.article.update({
                 where: { id },
                 data: { title, content },
-                include: { author: true },
             });
 
-            return {
-                ...updatedArticle,
-                isLiked: false,
-                commentCount: 0,
-                likeCount: 0,
-                createdAt: updatedArticle.createdAt.toISOString(),
-            };
+            return article;
         },
         async deleteArticle(_, { id }, { dataSources, user }) {
             const article = await dataSources.db.article.findUnique({
@@ -392,47 +256,17 @@ export const resolvers: Resolvers = {
                     articleId,
                     authorId: user.id,
                 },
-                include: {
-                    author: true,
-                    article: {
-                        include: {
-                            author: true,
-                        },
-                    },
-                },
             });
 
-            return {
-                ...comment,
-                createdAt: comment.createdAt.toISOString(),
-                article: {
-                    ...comment.article,
-                    createdAt: comment.article.createdAt.toISOString(),
-                },
-            };
+            return comment;
         },
         async likeArticle(_, { articleId }, { dataSources, user }) {
             if (!user?.id) throw new Error('Authentication required');
             const like = await dataSources.db.like.create({
                 data: { articleId, userId: user.id },
-                include: {
-                    user: true,
-                    article: {
-                        include: {
-                            author: true,
-                        },
-                    },
-                },
             });
 
-            return {
-                ...like,
-                createdAt: like.createdAt.toISOString(),
-                article: {
-                    ...like.article,
-                    createdAt: like.article.createdAt.toISOString(),
-                },
-            };
+            return like;
         },
         async unlikeArticle(_, { articleId }, { dataSources, user }) {
             if (!user?.id) throw new Error('Authentication required');

@@ -10,7 +10,6 @@ import RegisterModal from '../RegisterModal';
 const Header = () => {
     const { user, token, logout } = AuthProvider.use();
     const navigate = useNavigate();
-    //   const { user, token, login, logout } = useAuth();
 
     return (
         <Flex justify={'space-between'} align={'center'} h={'100%'} px={'xs'}>
@@ -45,14 +44,12 @@ const Header = () => {
                         <Button
                             component={NavLink}
                             to={`/user/${parseJwt(token).id}`}
-                            // size="lg"
                             variant="light"
                             style={{
                                 alignSelf: 'center',
                                 justifyContent: 'center',
                             }}
                         >
-                            {/* <Avatar name={user!} color="initials" /> */}
                             {user || 'Anonymous'}
                         </Button>
                         <Button onClick={logout}>Logout</Button>

@@ -185,7 +185,6 @@ const theme: MantineThemeOverride = {
     black: '#24292f',
     autoContrast: true,
     luminanceThreshold: 0.3,
-    //   isThemeDependentPrimaryShade: true,
     defaultGradient: {
         from: 'cyan',
         to: 'fairy',

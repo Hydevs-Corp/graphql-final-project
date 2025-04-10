@@ -13,7 +13,6 @@ import { CreateUserMutation, LoginMutation } from '../gql/graphql';
 import { GraphQLError } from 'graphql';
 import getCurrentUser_QUERY from '../scripts/requests/getCurrentUser';
 
-// Définir le contexte d'authentification
 interface AuthContextType {
     user: string | null;
     token: string | null;
@@ -76,7 +75,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             localStorage.setItem('token', tokenJWT);
             return res;
         } catch (error) {
-            // console.error('Login failed:', error);
             return {
                 errors: [new GraphQLError('Invalid username or password')],
             };
@@ -88,9 +86,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setUser(null);
             setToken(null);
             localStorage.removeItem('token');
-        } catch (error) {
-            // console.error('Logout failed:', error);
-        }
+        } catch (error) {}
     };
 
     const [registerMutate, { error: registerError, loading: registerLoading }] =
@@ -126,11 +122,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setUser(parseJwt(storedToken).username);
         }
     }, []);
-    // const storedToken = localStorage.getItem('token');
-    // if (storedToken && !token) {
-    //     setToken(storedToken);
-    //     setUser(parseJwt(storedToken).username);
-    // }
 
     return (
         <AuthContext.Provider
@@ -154,9 +145,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 const useAuth = () => {
     const context = useContext(AuthContext);
-    // if (!context) {
-    //   throw new Error('useAuth must be used within an AuthProvider');
-    // }
+
     return context;
 };
 

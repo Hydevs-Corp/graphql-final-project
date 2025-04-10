@@ -15,8 +15,8 @@ const Fly = () => {
         }
         const interval = setInterval(() => {
             setPosition((prev) => {
-                const angle = Math.random() * 2 * Math.PI; // Random angle
-                const distance = Math.random() * 100 + 10; // Random distance
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = Math.random() * 100 + 10;
                 const newX = Math.max(
                     0,
                     Math.min(
@@ -33,7 +33,7 @@ const Fly = () => {
                 );
                 setRotation(
                     (Math.atan2(newY - prev.y, newX - prev.x) * 180) / Math.PI
-                ); // Calculate rotation
+                );
                 return { x: newX, y: newY };
             });
         }, Math.random() * 100 + 100);

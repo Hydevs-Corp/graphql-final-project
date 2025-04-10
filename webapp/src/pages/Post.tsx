@@ -240,7 +240,6 @@ const Post = () => {
                             <></>
                         ) : (
                             <Button
-                                // flex={1}
                                 onClick={() => setEdit((prev) => !prev)}
                                 variant="outline"
                             >
@@ -270,13 +269,6 @@ const Post = () => {
                         mt={20}
                     >
                         {edit ? (
-                            // <Textarea
-                            //     placeholder="Write your post here"
-                            //     {...form.getInputProps('content')}
-                            //     label="Content of your post"
-                            //     autosize
-                            //     minRows={10}
-                            // />
                             <RichTextEditor editor={editor}>
                                 <RichTextEditor.Toolbar
                                     sticky

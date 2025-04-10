@@ -12,7 +12,14 @@ const Header = () => {
     const navigate = useNavigate();
 
     return (
-        <Flex justify={'space-between'} align={'center'} h={'100%'} px={'xs'}>
+        <Flex
+            maw={'1200px'}
+            justify={'space-between'}
+            align={'center'}
+            h={'100%'}
+            px={'xs'}
+            mx={'auto'}
+        >
             <Flex
                 gap={'xs'}
                 align="center"

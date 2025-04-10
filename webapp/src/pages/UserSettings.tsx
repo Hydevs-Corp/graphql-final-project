@@ -4,12 +4,15 @@ import {
     Container,
     Divider,
     Flex,
+    Group,
     Loader,
     SegmentedControl,
+    SimpleGrid,
     Table,
     Text,
     Title,
     Tooltip,
+    useMatches,
 } from '@mantine/core';
 
 import { useQuery } from '@apollo/client';
@@ -32,6 +35,11 @@ const UserSettings = () => {
         refetchWritePolicy: 'merge',
     });
 
+    const dividerOrientation = useMatches<'horizontal' | 'vertical'>({
+        base: 'horizontal',
+        md: 'vertical',
+    });
+
     useEffect(() => {
         refetch({
             id: parseInt(id!),
@@ -47,23 +55,28 @@ const UserSettings = () => {
                 <Table.Td>{article?.likeCount}</Table.Td>
                 <Table.Td>{article?.commentCount}</Table.Td>
                 <Table.Td>
-                    {new Date(article?.createdAt!).toLocaleDateString('en-US', {
-                        month: 'long',
-                        year: 'numeric',
-                        day: 'numeric',
-                    })}
+                    {new Date(parseInt(article?.createdAt!)).toLocaleDateString(
+                        'en-US',
+                        {
+                            month: 'long',
+                            year: 'numeric',
+                            day: 'numeric',
+                        }
+                    )}
                 </Table.Td>
                 <Table.Td>
-                    <Tooltip label="Go to article">
-                        <ActionIcon
-                            variant="light"
-                            color="blue"
-                            component={NavLink}
-                            to={`/post/${article?.id}`}
-                        >
-                            <IconArrowRight />
-                        </ActionIcon>
-                    </Tooltip>
+                    <Group justify="end">
+                        <Tooltip label="Go to article">
+                            <ActionIcon
+                                variant="light"
+                                color="blue"
+                                component={NavLink}
+                                to={`/post/${article?.id}`}
+                            >
+                                <IconArrowRight />
+                            </ActionIcon>
+                        </Tooltip>
+                    </Group>
                 </Table.Td>
             </Table.Tr>
         ));
@@ -79,16 +92,18 @@ const UserSettings = () => {
                 </Table.Td>
                 <Table.Td>{like?.article.author.username}</Table.Td>
                 <Table.Td>
-                    <Tooltip label="Go to article">
-                        <ActionIcon
-                            variant="light"
-                            color="blue"
-                            component={NavLink}
-                            to={`/post/${like?.article.id}`}
-                        >
-                            <IconArrowRight />
-                        </ActionIcon>
-                    </Tooltip>
+                    <Group justify="end">
+                        <Tooltip label="Go to article">
+                            <ActionIcon
+                                variant="light"
+                                color="blue"
+                                component={NavLink}
+                                to={`/post/${like?.article.id}`}
+                            >
+                                <IconArrowRight />
+                            </ActionIcon>
+                        </Tooltip>
+                    </Group>
                 </Table.Td>
             </Table.Tr>
         ));
@@ -114,29 +129,42 @@ const UserSettings = () => {
             </Title>
             <Divider />
             {loading && <Loader w={'100%'} style={{ alignSelf: 'center' }} />}
-            <Flex gap={'md'} justify={'space-between'}>
-                <Box w={'50%'}>
-                    <Title order={3} mt={'md'}>
-                        Article(s)
-                    </Title>
-                    <Table w={'100%'}>
-                        <Table.Thead>
-                            <Table.Tr>
-                                <Table.Th>Title</Table.Th>
-                                <Table.Th>Likes</Table.Th>
-                                <Table.Th>Comments</Table.Th>
-                                <Table.Th>Creation date</Table.Th>
-                                <Table.Th></Table.Th>
-                            </Table.Tr>
-                        </Table.Thead>
-                        <Table.Tbody>{articlesTable}</Table.Tbody>
-                    </Table>
-                </Box>
-                <Divider orientation="vertical" />
-                <Box w={'50%'}>
-                    <Title order={3} mt={'md'}>
-                        Like(s)
-                    </Title>
+            <SimpleGrid spacing={0} cols={{ base: 1, md: 2 }}>
+                <Flex
+                    direction={{
+                        base: 'column',
+                        md: 'row',
+                    }}
+                >
+                    <Box w={'100%'}>
+                        <Title order={3}>Article(s)</Title>
+                        <Table w={'100%'}>
+                            <Table.Thead>
+                                <Table.Tr>
+                                    <Table.Th>Title</Table.Th>
+                                    <Table.Th>Likes</Table.Th>
+                                    <Table.Th>Comments</Table.Th>
+                                    <Table.Th>Creation date</Table.Th>
+                                    <Table.Th></Table.Th>
+                                </Table.Tr>
+                            </Table.Thead>
+                            <Table.Tbody>{articlesTable}</Table.Tbody>
+                        </Table>
+                    </Box>
+                    <Divider
+                        mx={{
+                            base: 0,
+                            md: 'md',
+                        }}
+                        my={{
+                            base: 'md',
+                            md: 0,
+                        }}
+                        orientation={dividerOrientation}
+                    />
+                </Flex>
+                <Box w={'100%'}>
+                    <Title order={3}>Like(s)</Title>
                     <Table w={'100%'}>
                         <Table.Thead>
                             <Table.Tr>
@@ -148,7 +176,7 @@ const UserSettings = () => {
                         <Table.Tbody>{likeTable}</Table.Tbody>
                     </Table>
                 </Box>
-            </Flex>
+            </SimpleGrid>
             {user === data?.getUserById?.username && (
                 <Box mt={'xs'} w={'100%'}>
                     <Text>How often do you wash yourself?</Text>

@@ -135,7 +135,7 @@ const Dashboard = () => {
                     <Loader />
                 </Flex>
             )}
-            <SimpleGrid cols={{ base: 1, sm: 2 }} spacing={'sm'}>
+            <SimpleGrid pb={'md'} cols={{ base: 1, sm: 2 }} spacing={'sm'}>
                 {data?.getArticles?.map((post, i) => {
                     if (!post) return <React.Fragment key={i} />;
                     return (

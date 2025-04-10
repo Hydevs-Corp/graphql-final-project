@@ -24,5 +24,19 @@
     width: 100vw;
 }
 
-.fly {
+.overflow-box {
+    position: relative;
+}
+.overflow-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* linear for overflow vertical, then linear for horizontal */
+    background: linear-gradient(#ffffff00 90%, rgb(255, 255, 255) 100%),
+        linear-gradient(90deg, #ffffff00 95%, rgb(255, 255, 255) 100%);
+    /* z-index: -1; */
+    overflow: hidden;
 }

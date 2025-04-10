@@ -1,5 +1,6 @@
 import {
     Avatar,
+    Box,
     Button,
     Card,
     Flex,
@@ -85,13 +86,16 @@ const PostCard = ({
                     </Flex>
                 </Flex>
             </Card.Section>
-            <Markdown
+            <Box
+                className="overflow-box"
+                flex={1}
                 style={{
-                    flex: 1,
+                    overflow: 'hidden',
                 }}
+                mah={150}
             >
-                {content}
-            </Markdown>
+                <Markdown>{content}</Markdown>
+            </Box>
             <Flex mt={'xs'} gap="xs" justify={'space-between'}>
                 <Flex gap={'xs'}>
                     <Like

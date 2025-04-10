@@ -96,6 +96,7 @@ cd graphql-final-project
     ```
 
 4. Start the server:
+
     ```bash
     npm run dev
     ```
@@ -117,6 +118,7 @@ The server will run at `http://localhost:4000/graphql`.
     ```
 
 3. Start the development server:
+
     ```bash
     npm run dev
     ```
@@ -132,7 +134,7 @@ The frontend will run at `http://localhost:5173`.
     docker-compose up -d
     ```
 
-3. The backend will be available at `http://localhost:4000/graphql` and the frontend at `http://localhost:5173`.
+3. The application will be accessible at the port defined in the `.env` file.
 
 ---
 

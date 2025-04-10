@@ -1,4 +1,4 @@
-![ReadThot Logo](https://readthot.louisrvl.fr/logo.png | width=16)
+<img src="https://readthot.louisrvl.fr/logo.png" width="16" height="16" />
 
 # GraphQL Final Project - ReadThot
 
